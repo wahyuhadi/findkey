@@ -2,12 +2,14 @@ package services
 
 import (
 	"context"
+	"errors"
 	"findkey/github"
-	"fmt"
 	"net/http"
 )
 
-func GetList(session *http.Client, login string) []*github.Repository {
+// GetList Repo function -> to get all list repo in user
+// --> users/userlogin/repos?per_page=10000
+func GetList(session *http.Client, login, perpage string) ([]string, error) {
 	client := github.NewClient(session)
 	ctx := context.Background()
 
@@ -16,27 +18,19 @@ func GetList(session *http.Client, login string) []*github.Repository {
 		Perpage: "100000",
 	}
 
-	// looping in total repo
-	// 30 row perpage
-
-	//var allRepos []*github.Repository
-	perpage := "100000"
-	repos, _, err := client.Repositories.List(ctx, login, perpage, opt)
+	repos, _, err := client.Repositories.ListName(ctx, login, perpage, opt)
 	if err != nil {
-		fmt.Println("errr")
+		return nil, errors.New("[!] error when get list repo")
 	}
 
-	var allRepos []*github.Repository
-
-	loop := 0
-	// Looping
+	var RepositoryName []string
 	for _, repo := range repos {
+		// get repo only fork == false
 		if *repo.Fork == false {
-			loop = loop + 1
-			// allRepos = append(allRepos, repos.Name)
-			allRepos = append(allRepos, repos...)
+			RepositoryName = append(RepositoryName, *repo.Name)
 		}
 	}
 
-	return allRepos
+	// Return array name
+	return RepositoryName, nil
 }

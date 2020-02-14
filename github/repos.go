@@ -191,7 +191,6 @@ func (s *RepositoriesService) List(ctx context.Context, user string, perpage str
 	if err != nil {
 		return nil, nil, err
 	}
-	fmt.Println("=======", u, opts)
 
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
@@ -203,6 +202,42 @@ func (s *RepositoriesService) List(ctx context.Context, user string, perpage str
 	req.Header.Set("Accept", strings.Join(acceptHeaders, ", "))
 
 	var repos []*Repository
+	resp, err := s.client.Do(ctx, req, &repos)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return repos, resp, nil
+}
+
+type RepositoryName struct {
+	Name *string `json:"name,omitempty"`
+	Fork *bool   `json:"fork,omitempty"`
+}
+
+func (s *RepositoriesService) ListName(ctx context.Context, user string, perpage string, opts *RepositoryListOptions) ([]*RepositoryName, *Response, error) {
+	var u string
+	if user != "" {
+		u = fmt.Sprintf("users/%v/repos?per_page=%v", user, perpage)
+	} else {
+		u = fmt.Sprintf("user/repos?per_page=%v", perpage)
+	}
+
+	u, err := addOptions(u, opts)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	req, err := s.client.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// TODO: remove custom Accept headers when APIs fully launch.
+	acceptHeaders := []string{mediaTypeTopicsPreview}
+	req.Header.Set("Accept", strings.Join(acceptHeaders, ", "))
+
+	var repos []*RepositoryName
 	resp, err := s.client.Do(ctx, req, &repos)
 	if err != nil {
 		return nil, resp, err

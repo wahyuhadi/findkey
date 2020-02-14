@@ -125,7 +125,7 @@ type BranchCommit struct {
 // ListCommits lists the commits of a repository.
 //
 // GitHub API docs: https://developer.github.com/v3/repos/commits/#list
-func (s *RepositoriesService) ListCommits(ctx context.Context, owner, repo string, opts *CommitsListOptions) ([]*RepositoryCommit, *Response, error) {
+func (s *RepositoriesService) ListCommits(ctx context.Context, owner, repo, perpage string, opts *CommitsListOptions) ([]*RepositoryCommit, *Response, error) {
 	u := fmt.Sprintf("repos/%v/%v/commits", owner, repo)
 	u, err := addOptions(u, opts)
 	if err != nil {
