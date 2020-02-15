@@ -25,5 +25,5 @@ func main() {
 	tc := oauth2.NewClient(ctx, ts)
 	// service.GetList(tc, *user, *perpage)
 	repos, _ := service.GetList(tc, *user, *perpage)
-	service.GetListCommits(repos)
+	service.GetListCommitsSha(tc, *user, repos, *perpage)
 }

@@ -146,6 +146,30 @@ func (s *RepositoriesService) ListCommits(ctx context.Context, owner, repo, perp
 	return commits, resp, nil
 }
 
+type RepositoryCommitSha struct {
+	SHA *string `json:"sha,omitempty"`
+}
+
+func (s *RepositoriesService) ListCommitsSha(ctx context.Context, owner, repo, perpage string, opts *CommitsListOptions) ([]*RepositoryCommitSha, *Response, error) {
+	u := fmt.Sprintf("repos/%v/%v/commits?per_page=%v", owner, repo, perpage)
+	u, err := addOptions(u, opts)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	req, err := s.client.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	var commits []*RepositoryCommitSha
+	resp, err := s.client.Do(ctx, req, &commits)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return commits, resp, nil
+}
+
 // GetCommit fetches the specified commit, including all details about it.
 //
 // GitHub API docs: https://developer.github.com/v3/repos/commits/#get-a-single-commit
