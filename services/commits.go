@@ -22,7 +22,29 @@ func GetListCommitsSha(session *http.Client, user string, repos []string, perpag
 		}
 
 		for _, sha := range commits {
-			fmt.Println(reponame, *sha.SHA)
+			GetChangesCommit(session, user, reponame, *sha.SHA)
+		}
+	}
+}
+
+func GetChangesCommit(session *http.Client, user, reponame, sha string) {
+	client := github.NewClient(session)
+	ctx := context.Background()
+
+	// GetComit function github/repos_commits.go
+	commits, _, err := client.Repositories.GetCommit(ctx, user, reponame, sha)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	for _, changeCommits := range commits.Files {
+
+		// Posible object patch in json response is nil
+		// make validate to patch the error nil pointer
+		if changeCommits.Patch != nil {
+			fmt.Println("[+] repo name : ", reponame)
+			fmt.Println(*changeCommits.Patch)
 		}
 	}
 }
