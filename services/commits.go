@@ -44,7 +44,9 @@ func GetChangesCommit(session *http.Client, user, reponame, sha string) {
 		// make validate to patch the error nil pointer
 		if changeCommits.Patch != nil {
 			fmt.Println("[+] repo name : ", reponame)
-			fmt.Println(*changeCommits.Patch)
+			fmt.Println("[+] Filename : ", *changeCommits.Filename)
+			fmt.Println("[+] Add : ", *changeCommits.Additions)
+			fmt.Println("[+] Deleted : ", *changeCommits.Deletions)
 		}
 	}
 }

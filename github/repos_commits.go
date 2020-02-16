@@ -182,8 +182,6 @@ func (s *RepositoriesService) GetCommit(ctx context.Context, owner, repo, sha st
 		return nil, nil, err
 	}
 
-	fmt.Println("======================", u)
-
 	commit := new(RepositoryCommit)
 	resp, err := s.client.Do(ctx, req, commit)
 	if err != nil {
