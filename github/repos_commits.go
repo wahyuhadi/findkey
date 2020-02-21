@@ -176,7 +176,6 @@ func (s *RepositoriesService) ListCommitsSha(ctx context.Context, owner, repo, p
 // See also: https://developer.github.com/v3/git/commits/#get-a-single-commit provides the same functionality
 func (s *RepositoriesService) GetCommit(ctx context.Context, owner, repo, sha string) (*RepositoryCommit, *Response, error) {
 	u := fmt.Sprintf("repos/%v/%v/commits/%v?per_page=100000", owner, repo, sha)
-
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
 		return nil, nil, err

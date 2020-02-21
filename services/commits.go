@@ -43,10 +43,19 @@ func GetChangesCommit(session *http.Client, user, reponame, sha string) {
 		// Posible object patch in json response is nil
 		// make validate to patch the error nil pointer
 		if changeCommits.Patch != nil {
-			fmt.Println("[+] repo name : ", reponame)
-			fmt.Println("[+] Filename : ", *changeCommits.Filename)
-			fmt.Println("[+] Add : ", *changeCommits.Additions)
-			fmt.Println("[+] Deleted : ", *changeCommits.Deletions)
+
+			// Change commit file changes with regex
+			// return bool type is true or false
+			// function RegexCheckCommit in regex.go file
+			find, _ := RegexCheckCommit(*changeCommits.Patch)
+
+			// if found with regex
+			if find {
+				fmt.Println("\n[+] repo name : ", reponame)
+				fmt.Println("[+] Filename : ", *changeCommits.Filename)
+				fmt.Println("[+] Add : ", *changeCommits.Additions)
+				fmt.Println("[+] Deleted : ", *changeCommits.Deletions)
+			}
 		}
 	}
 }
