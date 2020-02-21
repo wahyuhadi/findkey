@@ -47,7 +47,7 @@ func GetChangesCommit(session *http.Client, user, reponame, sha string) {
 			// Change commit file changes with regex
 			// return bool type is true or false
 			// function RegexCheckCommit in regex.go file
-			find, _ := RegexCheckCommit(*changeCommits.Patch)
+			_, find, _ := RegexCheckCommit(*changeCommits.Patch)
 
 			// if found with regex
 			if find {
